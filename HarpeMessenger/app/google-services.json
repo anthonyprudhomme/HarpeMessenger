@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "757170867338",
+    "firebase_url": "https://harpemessenger.firebaseio.com",
+    "project_id": "harpemessenger",
+    "storage_bucket": "harpemessenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757170867338:android:e615072008490c76",
+        "android_client_info": {
+          "package_name": "com.harpe.harpemessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757170867338-fk60vciip6smkb8lc1fituf1uqhn8odo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.harpe.harpemessenger",
+            "certificate_hash": "0bfe82b46dc3403cccfec3d81bb7258926446d2b"
+          }
+        },
+        {
+          "client_id": "757170867338-tr2l9r1067578odsed1hbeq9mssor2ik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcYyTwoaLeFapfiyA1KJnVXotxZUPLMa8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757170867338-tr2l9r1067578odsed1hbeq9mssor2ik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

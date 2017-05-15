@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">HarpeMessenger</string>
+    <string name="action_settings">Settings</string>
+    <string name="progress_downloading">Progress downloading</string>
+    <string name="download_success">Download successful</string>
+    <string name="download_failure">Download failed</string>
+    <string name="progress_uploading">Progress uploading</string>
+    <string name="upload_success">Upload successful</string>
+    <string name="upload_failure">Upload failed</string>
+    <string name="sign_in_prompt">Sign in</string>
+    <string name="sign_in_anonymously">Sign in anonymously</string>
+    <string name="success">Success</string>
+    <string name="progress_auth">Progress authentification</string>
+    <string name="logout">Logout</string>
+    <string name="label_download">Label download</string>
+    <string name="download">Download</string>
+    <string name="label_link">Label link</string>
+    <string name="camera_button_text">Camera</string>
+    <string name="take_photo_prompt">Take photo</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="take_picture">Take picture</string>
+    <string name="camera">Camera</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="default_text">Default text</string>
+</resources>
