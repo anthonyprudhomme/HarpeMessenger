@@ -26,23 +26,28 @@ import java.util.concurrent.ExecutionException;
 
 public class HEDownloadService extends HEBaseTaskService {
 
-    private static final String TAG = "HELog";
-
     /**
      * Actions
      **/
     public static final String ACTION_DOWNLOAD = "action_download";
     public static final String DOWNLOAD_COMPLETED = "download_completed";
     public static final String DOWNLOAD_ERROR = "download_error";
-
     /**
      * Extras
      **/
     public static final String EXTRA_DOWNLOAD_PATH = "extra_download_path";
     public static final String EXTRA_BYTES_DOWNLOADED = "extra_bytes_downloaded";
-
+    private static final String TAG = "HELog";
     private StorageReference storageReference;
     private Bitmap bitmap;
+
+    public static IntentFilter getIntentFilter() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DOWNLOAD_COMPLETED);
+        filter.addAction(DOWNLOAD_ERROR);
+
+        return filter;
+    }
 
     @Override
     public void onCreate() {
@@ -191,14 +196,5 @@ public class HEDownloadService extends HEBaseTaskService {
         boolean success = bytesDownloaded != -1;
         String caption = success ? getString(R.string.download_success) : getString(R.string.download_failure);
         showFinishedNotification(caption, intent, true);
-    }
-
-
-    public static IntentFilter getIntentFilter() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(DOWNLOAD_COMPLETED);
-        filter.addAction(DOWNLOAD_ERROR);
-
-        return filter;
     }
 }

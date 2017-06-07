@@ -33,7 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new CameraFragment();
 
-            case 2 :
+            case 2:
 
                 return new MapsFragment();
 

@@ -2,12 +2,9 @@ package com.harpe.harpemessenger.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.harpe.harpemessenger.fragments.PictureListFragment;
 import com.harpe.harpemessenger.other.FileManager;
@@ -33,8 +30,22 @@ public class HEPicture implements Parcelable {
     public static final String ALTITUDE = "altitude";
     public static final String LAST_PATH_SEGMENT = "lastPathSegment";
     public static final String SIZE = "size";
-    private static final String TAG = "HELog";
     public static final String PICTURES_DATA = "picturesData";
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<HEPicture> CREATOR = new Parcelable.Creator<HEPicture>() {
+        @Override
+        public HEPicture createFromParcel(Parcel in) {
+            return new HEPicture(in);
+        }
+
+        @Override
+        public HEPicture[] newArray(int size) {
+            return new HEPicture[size];
+        }
+    };
+    private static final String TAG = "HELog";
+    private static HashMap<String, HEPicture> pictures;
+    private static HashMap<String, Bitmap> picturesDict = new HashMap<>();
     private Bitmap bitmap;
     private String lastPathSegment;
     private long byteCount;
@@ -43,8 +54,6 @@ public class HEPicture implements Parcelable {
     private double longitude;
     private String place;
     private String date;
-    private static HashMap<String, HEPicture> pictures;
-    private static HashMap<String, Bitmap> picturesDict = new HashMap<>();
 
     public HEPicture(Bitmap bitmap, String lastPathSegment, long byteCount, double altitude, double latitude, double longitude, String place, String date) {
         this.bitmap = bitmap;
@@ -72,36 +81,15 @@ public class HEPicture implements Parcelable {
         }
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public String getLastPathSegment() {
-        return lastPathSegment;
-    }
-
-    public long getByteCount() {
-        return byteCount;
-    }
-
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public String getDate() {
-        return date;
+    protected HEPicture(Parcel in) {
+        lastPathSegment = in.readString();
+        byteCount = in.readLong();
+        altitude = in.readDouble();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        place = in.readString();
+        date = in.readString();
+        bitmap = picturesDict.get(lastPathSegment);
     }
 
     public static HashMap<String, HEPicture> getPictures() {
@@ -136,46 +124,6 @@ public class HEPicture implements Parcelable {
         picture.saveBitmapToFile(hePicture.bitmap);
     }
 
-    protected HEPicture(Parcel in) {
-        lastPathSegment = in.readString();
-        byteCount = in.readLong();
-        altitude = in.readDouble();
-        latitude = in.readDouble();
-        longitude = in.readDouble();
-        place = in.readString();
-        date = in.readString();
-        bitmap = picturesDict.get(lastPathSegment);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(lastPathSegment);
-        dest.writeLong(byteCount);
-        dest.writeDouble(altitude);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeString(place);
-        dest.writeString(date);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<HEPicture> CREATOR = new Parcelable.Creator<HEPicture>() {
-        @Override
-        public HEPicture createFromParcel(Parcel in) {
-            return new HEPicture(in);
-        }
-
-        @Override
-        public HEPicture[] newArray(int size) {
-            return new HEPicture[size];
-        }
-    };
-
     public static void loadPicturesDataFromFile() {
         pictures = new HashMap<>();
         FileManager fileManager = new FileManager(PICTURES_DATA, null);
@@ -196,45 +144,9 @@ public class HEPicture implements Parcelable {
         new FileAsyncTask().execute();
     }
 
-    private static class PictureAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String filename = params[0];
-            FileManager fileManager = new FileManager(PICTURES, filename);
-            Bitmap bitmap = fileManager.loadBitmapFromFile();
-            HEPicture hePicture = pictures.get(filename);
-            hePicture.setBitmap(bitmap);
-            pictures.put(filename, hePicture);
-            picturesDict.put(filename, bitmap);
-            return filename;
-        }
-
-        @Override
-        protected void onPostExecute(String lastPathSegment) {
-            PictureListFragment.hePictureInterface.onNewPictureLoaded(lastPathSegment);
-        }
-    }
-
-    private static class FileAsyncTask extends AsyncTask<Void, Void, ArrayList<String>> {
-
-        @Override
-        protected ArrayList<String> doInBackground(Void... params) {
-            FileManager fileManager = new FileManager(PICTURES, null);
-            return fileManager.getFileNamesInDirectory();
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<String> filenames) {
-            for (int i = 0; i < filenames.size(); i++) {
-                new PictureAsyncTask().execute(filenames.get(i));
-            }
-        }
-    }
-
-    public static Bitmap resizeBitmap(Bitmap bitmap, int bitmapSize){
+    public static Bitmap resizeBitmap(Bitmap bitmap, int bitmapSize) {
         // first, make the bitmap square
-        if(bitmap!=null) {
+        if (bitmap != null) {
             Bitmap squaredBitmap;
             if (bitmap.getWidth() >= bitmap.getHeight()) {
 
@@ -258,7 +170,7 @@ public class HEPicture implements Parcelable {
             }
             // then, resize it to the value given in parameter
             return Bitmap.createScaledBitmap(squaredBitmap, bitmapSize, bitmapSize, false);
-        }else{
+        } else {
             return null;
         }
     }
@@ -288,7 +200,93 @@ public class HEPicture implements Parcelable {
         return inSampleSize;
     }
 
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public String getLastPathSegment() {
+        return lastPathSegment;
+    }
+
+    public long getByteCount() {
+        return byteCount;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(lastPathSegment);
+        dest.writeLong(byteCount);
+        dest.writeDouble(altitude);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(place);
+        dest.writeString(date);
+    }
+
+    private static class PictureAsyncTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String filename = params[0];
+            FileManager fileManager = new FileManager(PICTURES, filename);
+            Bitmap bitmap = fileManager.loadBitmapFromFile();
+            HEPicture hePicture = pictures.get(filename);
+            if (hePicture!=null) {
+                hePicture.setBitmap(bitmap);
+                pictures.put(filename, hePicture);
+                picturesDict.put(filename, bitmap);
+            }
+            return filename;
+        }
+
+        @Override
+        protected void onPostExecute(String lastPathSegment) {
+            PictureListFragment.hePictureInterface.onNewPictureLoaded(lastPathSegment);
+        }
+    }
+
+    private static class FileAsyncTask extends AsyncTask<Void, Void, ArrayList<String>> {
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            FileManager fileManager = new FileManager(PICTURES, null);
+            return fileManager.getFileNamesInDirectory();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> filenames) {
+            for (int i = 0; i < filenames.size(); i++) {
+                new PictureAsyncTask().execute(filenames.get(i));
+            }
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.harpe.harpemessenger.activities;
 
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;

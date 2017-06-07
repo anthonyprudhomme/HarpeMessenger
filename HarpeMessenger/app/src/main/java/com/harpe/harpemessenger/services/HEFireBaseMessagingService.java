@@ -19,9 +19,20 @@ import java.util.Iterator;
 
 public class HEFireBaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "HELog";
     public static final String LAST_PATH_SEGMENT = "lastPathSegment";
+    private static final String TAG = "HELog";
     private String lastPathSegment;
+
+    public static Bundle jsonToBundle(JSONObject jsonObject) throws JSONException {
+        Bundle bundle = new Bundle();
+        Iterator iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            String value = jsonObject.getString(key);
+            bundle.putString(key, value);
+        }
+        return bundle;
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -31,10 +42,10 @@ public class HEFireBaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             JSONObject jsonObject = new JSONObject(remoteMessage.getData());
-            Log.d(TAG, "onMessageReceived: "+jsonObject.toString());
+            Log.d(TAG, "onMessageReceived: " + jsonObject.toString());
             try {
                 lastPathSegment = jsonObject.getString(LAST_PATH_SEGMENT);
-                if (!HEPicture.getPicturesDict().containsKey(lastPathSegment)){
+                if (!HEPicture.getPicturesDict().containsKey(lastPathSegment)) {
                     Bundle bundle = jsonToBundle(jsonObject);
                     beginDownload(bundle);
                 }
@@ -53,7 +64,7 @@ public class HEFireBaseMessagingService extends FirebaseMessagingService {
     }
 
     private void beginDownload(Bundle bundle) {
-        Log.d(TAG, "beginDownload: ");
+        Log.d(TAG, "beginDownload in service: "+lastPathSegment);
         // Get path
         String path = "pictures/" + lastPathSegment;
 
@@ -63,16 +74,5 @@ public class HEFireBaseMessagingService extends FirebaseMessagingService {
                 .putExtras(bundle)
                 .setAction(HEDownloadService.ACTION_DOWNLOAD);
         startService(intent);
-    }
-
-    public static Bundle jsonToBundle(JSONObject jsonObject) throws JSONException {
-        Bundle bundle = new Bundle();
-        Iterator iterator = jsonObject.keys();
-        while (iterator.hasNext()) {
-            String key = (String) iterator.next();
-            String value = jsonObject.getString(key);
-            bundle.putString(key, value);
-        }
-        return bundle;
     }
 }

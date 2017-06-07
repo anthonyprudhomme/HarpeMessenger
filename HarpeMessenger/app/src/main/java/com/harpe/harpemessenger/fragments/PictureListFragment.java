@@ -3,7 +3,6 @@ package com.harpe.harpemessenger.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.harpe.harpemessenger.models.HEPicture;
 import com.harpe.harpemessenger.R;
 import com.harpe.harpemessenger.activities.PictureDetailActivity;
+import com.harpe.harpemessenger.models.HEPicture;
 import com.harpe.harpemessenger.other.HEPictureInterface;
 
 import java.util.ArrayList;
@@ -31,11 +30,11 @@ public class PictureListFragment extends Fragment implements HEPictureInterface 
 
     public static final String HE_PICTURE = "hePicture";
     public static final int BITMAP_SIZE = 300;
-    private ListView clientListView;
     private static final String TAG = "HELog";
+    public static HEPictureInterface hePictureInterface;
+    private ListView clientListView;
     private View rootView = null;
     private PictureAdapter adapter;
-    public static HEPictureInterface hePictureInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class PictureListFragment extends Fragment implements HEPictureInterface 
 
     @Override
     public void onNewPictureLoaded(String lastPathSegment) {
-        Log.d(TAG, "onNewPictureLoaded: "+lastPathSegment);
+        Log.d(TAG, "onNewPictureLoaded: " + lastPathSegment);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -101,7 +100,7 @@ public class PictureListFragment extends Fragment implements HEPictureInterface 
                 public void onClick(View v) {
                     if (picture != null) {
                         Intent intent = new Intent(getContext(), PictureDetailActivity.class);
-                        intent.putExtra(HE_PICTURE,picture);
+                        intent.putExtra(HE_PICTURE, picture);
                         startActivity(intent);
                     }
                 }

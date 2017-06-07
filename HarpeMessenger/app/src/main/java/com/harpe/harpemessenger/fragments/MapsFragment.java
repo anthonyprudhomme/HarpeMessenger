@@ -11,7 +11,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.harpe.harpemessenger.R;
@@ -69,6 +68,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             googleMap.addMarker(new MarkerOptions().position(coordinates).title(currentPicture.getLastPathSegment()));
         }
         // Will move the camera to the last coordinates
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
+        if (coordinates!=null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
+        }
     }
 }

@@ -7,10 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.Pair;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -55,10 +52,10 @@ public class CaptureButtonView extends View {
         paint.setAlpha(200);
         Resources r = getResources();
         float componentSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, r.getDisplayMetrics());
-        canvas.drawCircle(componentSize/2,componentSize/2,radius,paint);
+        canvas.drawCircle(componentSize / 2, componentSize / 2, radius, paint);
     }
 
-    public void animateButton(){
+    public void animateButton() {
 
     }
 }

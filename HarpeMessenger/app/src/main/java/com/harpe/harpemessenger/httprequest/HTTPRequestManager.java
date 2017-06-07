@@ -1,12 +1,10 @@
 package com.harpe.harpemessenger.httprequest;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,17 +17,17 @@ import okhttp3.Response;
 // This manager will help you handle http requests
 public class HTTPRequestManager {
 
-    private static final String TAG = "HELog";
     public static final String AUTHORIZATION = "Authorization";
     public static final String SERVER_KEY = "AAAAsErmjIo:APA91bGj6GHR0P1_hY2zj6NLwGcBRXwNpEnXQZgFo9ZHF2UVFRM7pxUfPuPOc1Kk0ibK6JhYVFcJBbBhsMaunPmQv8DicuSoendhntmBzfMJ-Ic8gKEeb84L486QL1VrUlLZBYiTJUFc";
     public static final int SEND_NOTIFICATION = 0;
     public static final String KEY = "key";
     public static final String CONTENT_TYPE = "Content-type";
     public static final String APPLICATION_JSON = "application/json";
-    private static OkHttpClient client = new OkHttpClient();
-    private static final String serverUrl = "https://fcm.googleapis.com/fcm/send";
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    private static final String TAG = "HELog";
+    private static final String serverUrl = "https://fcm.googleapis.com/fcm/send";
+    private static OkHttpClient client = new OkHttpClient();
 
     /*
                 HOW TO DO AN HTTP REQUEST
@@ -90,7 +88,7 @@ public class HTTPRequestManager {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader(CONTENT_TYPE, APPLICATION_JSON)
-                .addHeader(AUTHORIZATION, KEY + "=" +SERVER_KEY)
+                .addHeader(AUTHORIZATION, KEY + "=" + SERVER_KEY)
                 .post(formBody)
                 .build();
 
@@ -113,6 +111,21 @@ public class HTTPRequestManager {
                 .build();
         Response response = client.newCall(request).execute();
         return response.body().string();
+    }
+
+    public static boolean checkConnectionToEPFServer() {
+        try {
+            return InetAddress.getByName(serverUrl).isReachable(2000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public enum RequestType {
+        POST,
+        GET,
+        CHECK
     }
 
     // This class will send the request as an asynchronous task in order to avoid crash :
@@ -191,20 +204,5 @@ public class HTTPRequestManager {
             this.observer = observer;
             this.requestId = requestId;
         }
-    }
-
-    public enum RequestType {
-        POST,
-        GET,
-        CHECK
-    }
-
-    public static boolean checkConnectionToEPFServer() {
-        try {
-            return InetAddress.getByName(serverUrl).isReachable(2000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

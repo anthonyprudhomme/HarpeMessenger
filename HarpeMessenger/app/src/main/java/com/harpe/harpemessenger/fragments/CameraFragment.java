@@ -2,8 +2,6 @@ package com.harpe.harpemessenger.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,7 +46,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.harpe.harpemessenger.R;
 import com.harpe.harpemessenger.httprequest.HTTPRequestInterface;
 import com.harpe.harpemessenger.httprequest.HTTPRequestManager;
@@ -79,10 +76,6 @@ import java.util.Locale;
 
 public class CameraFragment extends Fragment implements HTTPRequestInterface, LocationListener {
 
-    private static final String TAG = "HELog";
-    private final static int CAMERA_BACK = 0;
-    private final static int CAMERA_FRONT = 1;
-
     // constants
     public static final String TO = "to";
     public static final String TOPIC = "/topics/Pictures";
@@ -95,10 +88,13 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
     public static final String PICTURES = "Pictures";
     public static final String LAST_PATH_SEGMENT = "lastPathSegment";
     public static final String MESSAGE_ID = "message_id";
-
-    private int currentCamera = 1;
-    private TextureView textureView;
+    private static final String TAG = "HELog";
+    private final static int CAMERA_BACK = 0;
+    private final static int CAMERA_FRONT = 1;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private static final int ACCESS_COARSE_LOCATION = 1;
+    public static final String HE_PICTURE = "hePicture";
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -107,24 +103,77 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-    private String cameraId;
     protected CameraDevice cameraDevice;
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
+    private int currentCamera = 1;
+    private TextureView textureView;
+    private String cameraId;
     private Size imageDimension;
+    TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            //open your camera here
+            openCamera(currentCamera);
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            // Transform you image captured size according to the surface width and height
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            return false;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        }
+    };
     private ImageReader imageReader;
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
-
     private Handler backgroundHandler;
-    private HandlerThread backgroundThread;
+    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        @Override
+        public void onOpened(CameraDevice camera) {
+            //This is called when the camera is open
+            cameraDevice = camera;
+            createCameraPreview();
+        }
 
+        @Override
+        public void onDisconnected(CameraDevice camera) {
+            cameraDevice.close();
+        }
+
+        @Override
+        public void onError(CameraDevice camera, int error) {
+            cameraDevice.close();
+            cameraDevice = null;
+        }
+    };
+    final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
+        @Override
+        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+            super.onCaptureCompleted(session, request, result);
+            //Toast.makeText(getContext(), "Saved:" + file, Toast.LENGTH_SHORT).show();
+            createCameraPreview();
+        }
+    };
+    private HandlerThread backgroundThread;
     private Uri downloadUri = null;
     private Uri fileUri = null;
-
-    private static final int ACCESS_COARSE_LOCATION = 1;
     private LocationManager locationManager;
     private String cityName;
     private Location currentLocation;
+
+    // this method is necessary in case the user delete the folder created by the app
+    public static void fixMediaDir() {
+        String appDirectoryName = PICTURES;
+        File imageRoot = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), appDirectoryName);
+        imageRoot.mkdirs();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,55 +211,6 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
 
         return view;
     }
-
-    TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
-        @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-            //open your camera here
-            openCamera(currentCamera);
-        }
-
-        @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            // Transform you image captured size according to the surface width and height
-        }
-
-        @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            return false;
-        }
-
-        @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-        }
-    };
-    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
-        @Override
-        public void onOpened(CameraDevice camera) {
-            //This is called when the camera is open
-            cameraDevice = camera;
-            createCameraPreview();
-        }
-
-        @Override
-        public void onDisconnected(CameraDevice camera) {
-            cameraDevice.close();
-        }
-
-        @Override
-        public void onError(CameraDevice camera, int error) {
-            cameraDevice.close();
-            cameraDevice = null;
-        }
-    };
-    final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
-        @Override
-        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
-            //Toast.makeText(getContext(), "Saved:" + file, Toast.LENGTH_SHORT).show();
-            createCameraPreview();
-        }
-    };
 
     protected void startBackgroundThread() {
         backgroundThread = new HandlerThread("Camera Background");
@@ -290,30 +290,37 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
                     Bitmap pictureAsBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
                     Matrix matrix = new Matrix();
-                    if(currentCamera == CAMERA_FRONT) {
+                    if (currentCamera == CAMERA_FRONT) {
                         matrix.postRotate(-90);
-                    }else{
-                        if (currentCamera == CAMERA_BACK){
+                    } else {
+                        if (currentCamera == CAMERA_BACK) {
                             matrix.postRotate(90);
                         }
                     }
                     Bitmap rotatedBitmap = Bitmap.createBitmap(pictureAsBitmap, 0, 0, pictureAsBitmap.getWidth(), pictureAsBitmap.getHeight(), matrix, true);
 
                     Uri uri = getImageUri(getContext(), rotatedBitmap);
+                    double altitude = 0;
+                    double latitude = 0;
+                    double longitude = 0;
+                    if (currentLocation != null) {
+                        altitude = currentLocation.getAltitude();
+                        latitude = currentLocation.getLatitude();
+                        longitude = currentLocation.getLongitude();
+                    }
                     HEPicture hePicture = new HEPicture(rotatedBitmap,
                             uri.getLastPathSegment(),
                             sizeOf(rotatedBitmap),
-                            currentLocation.getAltitude(),
-                            currentLocation.getLatitude(),
-                            currentLocation.getLongitude(),
+                            altitude,
+                            latitude,
+                            longitude,
                             cityName,
                             Calendar.getInstance().getTime().toString()
                     );
-                    HEPicture.getPictures().put(hePicture.getLastPathSegment(),hePicture);
+                    HEPicture.getPictures().put(hePicture.getLastPathSegment(), hePicture);
                     PictureListFragment.hePictureInterface.onNewPictureLoaded(hePicture.getLastPathSegment());
                     HEPicture.savePicture(hePicture);
-                    uploadFromUri(uri);
-                    sendNotification(hePicture);
+                    uploadFromUri(uri,hePicture);
                 }
             };
             reader.setOnImageAvailableListener(readerListener, backgroundHandler);
@@ -457,7 +464,7 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
         super.onPause();
     }
 
-    private void uploadFromUri(Uri fileUri) {
+    private void uploadFromUri(Uri fileUri, HEPicture hePicture) {
 
         // Save the File URI
         this.fileUri = fileUri;
@@ -468,8 +475,8 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
         // even if this Activity is killed or put in the background
         getActivity().startService(new Intent(getContext(), HEUploadService.class)
                 .putExtra(HEUploadService.EXTRA_FILE_URI, fileUri)
+                .putExtra(HE_PICTURE,hePicture)
                 .setAction(HEUploadService.ACTION_UPLOAD));
-
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -480,33 +487,6 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
         return Uri.parse(path);
     }
 
-    // this method is necessary in case the user delete the folder created by the app
-    public static void fixMediaDir() {
-        String appDirectoryName = PICTURES;
-        File imageRoot = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), appDirectoryName);
-        imageRoot.mkdirs();
-    }
-
-    private void sendNotification(HEPicture hePicture) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONObject data = new JSONObject();
-            data.put(PLACE, hePicture.getPlace());
-            data.put(DATE, hePicture.getDate());
-            data.put(ALTITUDE, hePicture.getAltitude());
-            data.put(LATITUDE, hePicture.getLatitude());
-            data.put(LONGITUDE, hePicture.getLongitude());
-            data.put(LAST_PATH_SEGMENT, fileUri.getLastPathSegment());
-            jsonObject.put(TO, TOPIC);
-            jsonObject.put(DATA, data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG, "sendNotification: "+jsonObject.toString());
-        HTTPRequestManager.doPostRequest("", jsonObject.toString(), this, HTTPRequestManager.SEND_NOTIFICATION);
-    }
-
     @Override
     public void onRequestDone(String result, int requestId) {
         switch (requestId) {
@@ -515,7 +495,7 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
                 try {
                     jsonObject = new JSONObject(result);
                     int messageId = jsonObject.getInt(MESSAGE_ID);
-                    if (messageId>=0){
+                    if (messageId >= 0) {
                         Toast.makeText(getContext(), R.string.picture_sent, Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {

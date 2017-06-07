@@ -21,12 +21,11 @@ import com.harpe.harpemessenger.activities.HomePageActivity;
 public class SwitchCameraButtonView extends View {
 
     private static final String TAG = "HELog";
+    RectF rectF;
     private Paint paint;
     private int screenHeight;
     private int screenWidth;
-
     private int radius;
-    RectF rectF;
 
     public SwitchCameraButtonView(Context context) {
         super(context);
@@ -41,14 +40,14 @@ public class SwitchCameraButtonView extends View {
         wm.getDefaultDisplay().getMetrics(metrics);
         screenHeight = metrics.heightPixels;
         screenWidth = metrics.widthPixels;
-        radius = screenWidth/15;
-        int xPos = screenWidth - screenWidth/10;
+        radius = screenWidth / 15;
+        int xPos = screenWidth - screenWidth / 10;
         Resources r = getResources();
         float componentSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, r.getDisplayMetrics());
-        rectF = new RectF((int)(componentSize/1.5)-radius/2,
-                radius/2+ HomePageActivity.heightOfStatusBar/2,
-                (int)(componentSize/1.5)+radius/2,
-                3*radius/2+ HomePageActivity.heightOfStatusBar/2);
+        rectF = new RectF((int) (componentSize / 1.5) - radius / 2,
+                radius / 2 + HomePageActivity.heightOfStatusBar / 2,
+                (int) (componentSize / 1.5) + radius / 2,
+                3 * radius / 2 + HomePageActivity.heightOfStatusBar / 2);
     }
 
     public SwitchCameraButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
