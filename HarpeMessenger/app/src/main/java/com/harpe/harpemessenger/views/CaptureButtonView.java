@@ -1,6 +1,7 @@
-package com.harpe.harpemessenger;
+package com.harpe.harpemessenger.views;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,12 +9,13 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
 /**
- * Created by anthony on 14/05/2017.
+ * Created by Harpe-e on 14/05/2017.
  */
 
 public class CaptureButtonView extends View {
@@ -51,9 +53,9 @@ public class CaptureButtonView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(15);
         paint.setAlpha(200);
-        int xPos = screenWidth/2;
-        int yPos = (int) (screenHeight - 3*radius);
-        canvas.drawCircle(xPos,yPos,radius,paint);
+        Resources r = getResources();
+        float componentSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, r.getDisplayMetrics());
+        canvas.drawCircle(componentSize/2,componentSize/2,radius,paint);
     }
 
     public void animateButton(){

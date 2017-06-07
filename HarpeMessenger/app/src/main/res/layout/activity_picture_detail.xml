@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/transparent"/>
+
+    <TextView
+        android:layout_margin="5dp"
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/picture"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:text="NAME--------"/>
+
+    <TextView
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/date"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:textColor="@color/white"
+        android:text="DATE---------"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/transparent"
+        android:layout_alignBottom="@id/picture"/>
+
+    <TextView
+        android:layout_margin="7dp"
+        android:id="@+id/at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/picture"
+        android:layout_alignStart="@id/picture"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="@string/at"/>
+
+    <TextView
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="7dp"
+        android:id="@+id/place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/picture"
+        android:layout_toEndOf="@id/at"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="PLACE--------"/>
+
+    <TextView
+        android:layout_margin="7dp"
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/picture"
+        android:layout_alignBottom="@id/picture"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="SIZE----------"/>
+
+
+
+</RelativeLayout>

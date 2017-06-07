@@ -1,4 +1,4 @@
-package com.harpe.harpemessenger;
+package com.harpe.harpemessenger.services;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,14 +15,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.harpe.harpemessenger.R;
+import com.harpe.harpemessenger.activities.HomePageActivity;
 
 /**
- * Created by anthony on 14/05/2017.
+ * Created by Harpe-e on 14/05/2017.
  */
 
 public class HEUploadService extends HEBaseTaskService {
 
-    private static final String TAG = "MyUploadService";
+    private static final String TAG = "HELog";
 
     /** Intent Actions **/
     public static final String ACTION_UPLOAD = "action_upload";
@@ -54,7 +56,7 @@ public class HEUploadService extends HEBaseTaskService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand:" + intent + ":" + startId);
+        //Log.d(TAG, "onStartCommand:" + intent + ":" + startId);
         if (ACTION_UPLOAD.equals(intent.getAction())) {
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
             uploadFromUri(fileUri);
@@ -65,7 +67,7 @@ public class HEUploadService extends HEBaseTaskService {
 
     // [START upload_from_uri]
     private void uploadFromUri(final Uri fileUri) {
-        Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
+        //Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
 
         // [START_EXCLUDE]
         taskStarted();
@@ -74,12 +76,12 @@ public class HEUploadService extends HEBaseTaskService {
 
         // [START get_child_ref]
         // Get a reference to store file at photos/<FILENAME>.jpg
-        final StorageReference photoRef = mStorageRef.child("photos")
+        final StorageReference photoRef = mStorageRef.child("pictures")
                 .child(fileUri.getLastPathSegment());
         // [END get_child_ref]
 
         // Upload file to Firebase Storage
-        Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());
+        //Log.d(TAG, "uploadFromUri:dst:" + photoRef.getPath());
         photoRef.putFile(fileUri).
                 addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -93,7 +95,7 @@ public class HEUploadService extends HEBaseTaskService {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Upload succeeded
-                        Log.d(TAG, "uploadFromUri:onSuccess");
+                        //Log.d(TAG, "uploadFromUri:onSuccess");
 
                         // Get the public download URL
                         Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
@@ -145,7 +147,7 @@ public class HEUploadService extends HEBaseTaskService {
         dismissProgressNotification();
 
         // Make Intent to HomePageActivity
-        Intent intent = new Intent(this, DownloadActivity.class)
+        Intent intent = new Intent(this, HomePageActivity.class)
                 .putExtra(EXTRA_DOWNLOAD_URL, downloadUrl)
                 .putExtra(EXTRA_FILE_URI, fileUri)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

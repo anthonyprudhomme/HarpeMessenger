@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CameraFragment">
+    tools:context=".fragments.CameraFragment">
 
     <TextureView
         android:id="@+id/texture"
@@ -12,14 +12,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
-    <com.harpe.harpemessenger.CaptureButtonView
-        android:id="@+id/capture_button_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.harpe.harpemessenger.SwitchCameraButtonView
+    <com.harpe.harpemessenger.views.SwitchCameraButtonView
         android:id="@+id/switch_camera_button_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"/>
+
+    <com.harpe.harpemessenger.views.CaptureButtonView
+        android:id="@+id/capture_button_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+
 
 </RelativeLayout>

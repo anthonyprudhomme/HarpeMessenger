@@ -22,4 +22,8 @@
     <string name="camera">Camera</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="default_text">Default text</string>
+    <string name="picture_detail">Picture detail</string>
+    <string name="picture_sent">Picture sent successfully to topic Pictures</string>
+    <string name="at">at:</string>
+    <string name="title_activity_maps_fragment">Map</string>
 </resources>

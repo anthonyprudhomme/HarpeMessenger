@@ -1,4 +1,4 @@
-package com.harpe.harpemessenger;
+package com.harpe.harpemessenger.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.harpe.harpemessenger.R;
+
 /**
- * Created by anthony on 14/05/2017.
+ * Created by Harpe-e on 14/05/2017.
  */
 
 public abstract class HEBaseTaskService extends Service {
@@ -17,7 +19,7 @@ public abstract class HEBaseTaskService extends Service {
     static final int PROGRESS_NOTIFICATION_ID = 0;
     static final int FINISHED_NOTIFICATION_ID = 1;
 
-    private static final String TAG = "MyBaseTaskService";
+    private static final String TAG = "HELog";
     private int mNumTasks = 0;
 
     public void taskStarted() {
@@ -29,12 +31,10 @@ public abstract class HEBaseTaskService extends Service {
     }
 
     private synchronized void changeNumberOfTasks(int delta) {
-        Log.d(TAG, "changeNumberOfTasks:" + mNumTasks + ":" + delta);
         mNumTasks += delta;
 
         // If there are no tasks left, stop the service
         if (mNumTasks <= 0) {
-            Log.d(TAG, "stopping");
             stopSelf();
         }
     }

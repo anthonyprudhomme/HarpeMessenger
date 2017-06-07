@@ -1,17 +1,21 @@
-package com.harpe.harpemessenger;
+package com.harpe.harpemessenger.views;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.harpe.harpemessenger.activities.HomePageActivity;
+
 /**
- * Created by anthony on 14/05/2017.
+ * Created by Harpe-e on 14/05/2017.
  */
 
 public class SwitchCameraButtonView extends View {
@@ -39,9 +43,11 @@ public class SwitchCameraButtonView extends View {
         screenWidth = metrics.widthPixels;
         radius = screenWidth/15;
         int xPos = screenWidth - screenWidth/10;
-        rectF = new RectF(xPos-radius/2,
+        Resources r = getResources();
+        float componentSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, r.getDisplayMetrics());
+        rectF = new RectF((int)(componentSize/1.5)-radius/2,
                 radius/2+ HomePageActivity.heightOfStatusBar/2,
-                xPos+radius/2,
+                (int)(componentSize/1.5)+radius/2,
                 3*radius/2+ HomePageActivity.heightOfStatusBar/2);
     }
 
@@ -57,9 +63,5 @@ public class SwitchCameraButtonView extends View {
         paint.setStrokeWidth(15);
         paint.setAlpha(200);
         canvas.drawRoundRect(rectF, 10, 10, paint);
-    }
-
-    public void animateButton() {
-
     }
 }

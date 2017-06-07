@@ -1,4 +1,4 @@
-package com.harpe.harpemessenger;
+package com.harpe.harpemessenger.services;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 /**
- * Created by anthony on 14/05/2017.
+ * Created by Harpe-e on 14/05/2017.
  */
 
 public class HEFireBaseInstanceIdService extends FirebaseInstanceIdService {
