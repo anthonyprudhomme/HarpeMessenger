@@ -58,8 +58,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         this.googleMap = map;
+        updateMakers();
+    }
 
-        // Add a marker in Sydney and move the camera
+    public void updateMakers() {
         ArrayList<HEPicture> pictures = new ArrayList<>(HEPicture.getPictures().values());
         LatLng coordinates = null;
         for (int i = 0; i < pictures.size(); i++) {

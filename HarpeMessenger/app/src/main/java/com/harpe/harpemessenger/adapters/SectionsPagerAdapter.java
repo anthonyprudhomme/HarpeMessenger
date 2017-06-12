@@ -16,6 +16,7 @@ import com.harpe.harpemessenger.fragments.PlaceholderFragment;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private PictureListFragment pictureListFragment;
+    private MapsFragment mapsFragment;
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -34,8 +35,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return new CameraFragment();
 
             case 2:
-
-                return new MapsFragment();
+                if (mapsFragment == null) {
+                    mapsFragment = new MapsFragment();
+                }
+                return mapsFragment;
 
             default:
                 // getItem is called to instantiate the fragment for the given page.
@@ -65,5 +68,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public PictureListFragment getPictureListFragment() {
         return pictureListFragment;
+    }
+
+    public MapsFragment getMapsFragment(){
+        return mapsFragment;
     }
 }

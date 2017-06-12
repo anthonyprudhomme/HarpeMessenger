@@ -46,10 +46,16 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
         if (getIntent() != null && getIntent().getExtras() != null) {
             getDataFromPicture(getIntent().getExtras());
         }
-        setContentView(R.layout.activity_home_page);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         FirebaseMessaging.getInstance().subscribeToTopic("Pictures");
         HEPicture.loadPicturesDataFromFile();
         HEPicture.loadPicturesBitmapFromFile();
@@ -74,18 +80,27 @@ public class HomePageActivity extends AppCompatActivity {
                         HEPicture.savePicture(hePicture);
                         Log.d(TAG, "onReceive: picture saved");
                         HEPicture.getPictures().put(hePicture.getLastPathSegment(), hePicture);
-                        if(sectionsPagerAdapter.getPictureListFragment().getAdapter()!=null) {
+                        if (sectionsPagerAdapter.getPictureListFragment().getAdapter() != null) {
+                            sectionsPagerAdapter.getPictureListFragment().getAdapter().add(hePicture);
                             sectionsPagerAdapter.getPictureListFragment().getAdapter().notifyDataSetChanged();
+                            sectionsPagerAdapter.getMapsFragment().updateMakers();
                         }
                         break;
                     case HEDownloadService.DOWNLOAD_ERROR:
 
                         break;
+
                     default:
                         break;
                 }
             }
         };
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        viewPager.setCurrentItem(1);
+        return true;
     }
 
     private void getDataFromPicture(Bundle bundle) {

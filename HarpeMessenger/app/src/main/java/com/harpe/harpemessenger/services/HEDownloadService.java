@@ -113,54 +113,6 @@ public class HEDownloadService extends HEBaseTaskService {
                 taskCompleted();
             }
         }.execute();
-//        storageReference.child(downloadPath).getStream(
-//                new StreamDownloadTask.StreamProcessor() {
-//                    @Override
-//                    public void doInBackground(StreamDownloadTask.TaskSnapshot taskSnapshot,
-//                                               InputStream inputStream) throws IOException {
-//                        long totalBytes = taskSnapshot.getTotalByteCount();
-//                        long bytesDownloaded = 0;
-//
-//                        byte[] buffer = new byte[1024];
-//                        int size;
-//
-//                        while ((size = inputStream.read(buffer)) != -1) {
-//                            bytesDownloaded += size;
-//                            showProgressNotification(getString(R.string.progress_downloading),
-//                                    bytesDownloaded, totalBytes);
-//                        }
-//
-//                        // Close the stream at the end of the Task
-//                        inputStream.close();
-//                    }
-//                })
-//                .addOnSuccessListener(new OnSuccessListener<StreamDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(StreamDownloadTask.TaskSnapshot taskSnapshot) {
-//                        Log.d(TAG, "download:SUCCESS");
-//
-//                        // Send success broadcast with number of bytes downloaded
-//                        broadcastDownloadFinished(downloadPath, taskSnapshot.getTotalByteCount());
-//                        showDownloadFinishedNotification(downloadPath, (int) taskSnapshot.getTotalByteCount());
-//
-//
-//                        // Mark task completed
-//                        taskCompleted();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        Log.w(TAG, "download:FAILURE", exception);
-//
-//                        // Send failure broadcast
-//                        broadcastDownloadFinished(downloadPath, -1);
-//                        showDownloadFinishedNotification(downloadPath, -1);
-//
-//                        // Mark task completed
-//                        taskCompleted();
-//                    }
-//                });
     }
 
     /**

@@ -26,4 +26,6 @@
     <string name="picture_sent">Picture sent successfully to topic Pictures</string>
     <string name="at">at:</string>
     <string name="title_activity_maps_fragment">Map</string>
+    <string name="he_messenger">Harp-e Messenger</string>
+    <string name="filter_title_he_messenger">Harp-e Messenger</string>
 </resources>

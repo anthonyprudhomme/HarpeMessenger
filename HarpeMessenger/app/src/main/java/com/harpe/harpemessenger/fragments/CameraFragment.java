@@ -300,6 +300,7 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
                     Bitmap rotatedBitmap = Bitmap.createBitmap(pictureAsBitmap, 0, 0, pictureAsBitmap.getWidth(), pictureAsBitmap.getHeight(), matrix, true);
 
                     Uri uri = getImageUri(getContext(), rotatedBitmap);
+
                     double altitude = 0;
                     double latitude = 0;
                     double longitude = 0;
@@ -320,7 +321,7 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
                     HEPicture.getPictures().put(hePicture.getLastPathSegment(), hePicture);
                     PictureListFragment.hePictureInterface.onNewPictureLoaded(hePicture.getLastPathSegment());
                     HEPicture.savePicture(hePicture);
-                    uploadFromUri(uri,hePicture);
+                    uploadFromUri(uri, hePicture);
                 }
             };
             reader.setOnImageAvailableListener(readerListener, backgroundHandler);
@@ -475,7 +476,7 @@ public class CameraFragment extends Fragment implements HTTPRequestInterface, Lo
         // even if this Activity is killed or put in the background
         getActivity().startService(new Intent(getContext(), HEUploadService.class)
                 .putExtra(HEUploadService.EXTRA_FILE_URI, fileUri)
-                .putExtra(HE_PICTURE,hePicture)
+                .putExtra(HE_PICTURE, hePicture)
                 .setAction(HEUploadService.ACTION_UPLOAD));
     }
 

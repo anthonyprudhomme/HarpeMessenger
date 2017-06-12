@@ -119,7 +119,6 @@ public class HEPicture implements Parcelable {
         }
         data.saveFile(dataJson.toString());
 
-
         FileManager picture = new FileManager(PICTURES, hePicture.getLastPathSegment());
         picture.saveBitmapToFile(hePicture.bitmap);
     }
@@ -149,7 +148,6 @@ public class HEPicture implements Parcelable {
         if (bitmap != null) {
             Bitmap squaredBitmap;
             if (bitmap.getWidth() >= bitmap.getHeight()) {
-
                 squaredBitmap = Bitmap.createBitmap(
                         bitmap,
                         bitmap.getWidth() / 2 - bitmap.getHeight() / 2,
@@ -159,7 +157,6 @@ public class HEPicture implements Parcelable {
                 );
 
             } else {
-
                 squaredBitmap = Bitmap.createBitmap(
                         bitmap,
                         0,

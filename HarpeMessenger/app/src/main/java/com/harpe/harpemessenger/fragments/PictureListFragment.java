@@ -54,17 +54,19 @@ public class PictureListFragment extends Fragment implements HEPictureInterface 
     }
 
     @Override
-    public void onNewPictureLoaded(String lastPathSegment) {
+    public void onNewPictureLoaded(final String lastPathSegment) {
         Log.d(TAG, "onNewPictureLoaded: " + lastPathSegment);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                adapter.clear();
+                adapter.addAll(HEPicture.getPictures().values());
                 adapter.notifyDataSetChanged();
             }
         });
     }
 
-    public class PictureAdapter extends ArrayAdapter<HEPicture> implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public class PictureAdapter extends ArrayAdapter<HEPicture> {
 
         public PictureAdapter(Context context, List<HEPicture> pictures) {
             super(context, 0, pictures);
@@ -107,11 +109,6 @@ public class PictureListFragment extends Fragment implements HEPictureInterface 
             });
 
             return convertView;
-        }
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            notifyDataSetChanged();
         }
 
         private class PictureViewHolder {
